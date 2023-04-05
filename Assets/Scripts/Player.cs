@@ -1,30 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    public float hp;
+    public float maxHp = 100; //Essa Linha
     public float moveX;
     public float moveY;
     public float moveSpeed;
     bool isMoving;
     public Animator anim;
     public Rigidbody2D rig2D;
-    
+    public Image heart; //Essa Linha
+    public int enemiesDefeat = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
+
+        hp = maxHp; //Essa Linha
     }
     // Update is called once per frame
     void Update()
     {
         moveX = Input.GetAxisRaw("Horizontal");
         moveY = Input.GetAxisRaw("Vertical");
+        
+        if(hp <= 0)
+        {
+            SceneManager.LoadScene("SceneGameOver");
+        }
+        else if(enemiesDefeat >= 3)
+        {
+            SceneManager.LoadScene("SceneGameWin");
+        }
+        
         Movement();
         Animation();
         Attack();
+        UpdateUI();
     }
     
     void Movement()
@@ -56,4 +74,8 @@ public class Player : MonoBehaviour
         }
     }
 
+    void UpdateUI()
+    {
+        heart.fillAmount = hp / maxHp;
+    }
 }
